@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Herbarium Image Viewer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/openseadragon.min.js"></script>
+  <style>
+    body { background: #000; color: #4CAF50; font-family: Roboto, sans-serif; margin: 2rem; }
+    #openseadragon { width: 90vw; height: 70vh; margin: auto; border: 2px solid #4CAF50; border-radius: 10px; }
+  </style>
+</head>
+<body>
+
+  <h1>Herbarium Image Viewer</h1>
+
+  <div id="openseadragon"></div>
+
+  <script>
+    // Hämta 'image' param från URL, fallback till standard
+    function getQueryParam(param) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(param) || 'GB-0998621';
+    }
+
+    const imageId = getQueryParam('image');
+    const iiifUrl = `http://localhost:12415/iiif/${imageId}.jp2/info.json`;
+
+    const viewer = OpenSeadragon({
+      id: "openseadragon",
+      prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/images/",
+      tileSources: iiifUrl
+    });
+  </script>
+
+</body>
+</html>
