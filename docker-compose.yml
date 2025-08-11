@@ -1,0 +1,12 @@
+services:
+  rais:
+    image: uolibraries/rais:latest
+    container_name: rais
+    ports:
+      - "12415:12415"
+    environment:
+      - RAIS_ADDRESS=:12415
+      - RAIS_IIIFURL=http://localhost:12415/iiif
+      - RAIS_TILEPATH=/var/local/images
+    volumes:
+      - ./images:/var/local/images:ro
