@@ -12,6 +12,7 @@ This test demonstrates how to use RAIS to serve large herbarium images according
 - Python 3 (to start a simple web server for `viewer.html`)
 
 ## Structure
+
 ```
 RAIS-test/
 ├── docker-compose.yml      # Starts the RAIS IIIF server
@@ -40,6 +41,7 @@ RAIS-test/
    Replace GB-0526335 with the filename (without .jp2) of any image in the images folder.
 
 ## How the RAIS IIIF server works
+
 Images are accessible via URLs following the IIIF Image API pattern:
 ```
 {scheme}://{server}/{prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}
@@ -58,3 +60,9 @@ Get image metadata:
 ```
 http://localhost:12415/iiif/GB-0998621.jp2/info.json
 ```
+
+## How OpenSeadragon works
+
+[OpenSeadragon](https://openseadragon.github.io/) is a JavaScript library for viewing large, zoomable images.  
+It loads only the visible parts of an image as small tiles, so you can pan and zoom smoothly without downloading the entire file.  
+When used with a IIIF server like RAIS, it reads `info.json` to know how to request the right tiles at the right resolution.
