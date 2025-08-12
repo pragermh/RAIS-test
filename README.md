@@ -1,31 +1,60 @@
-Minimal test of showing HBGB-images in different formats using the Rodent-Assimilated Image Server, which is an IIIF made available by University of Oregon Libraries. See:
-https://hub.docker.com/r/uolibraries/rais
-https://github.com/uoregon-libraries/rais-image-server/wiki
+# RAIS-test
 
-Start docker container with:
-docker compose up -d
+Minimal test environment for displaying herbarium images in different formats using the **Rodent-Assimilated Image Server (RAIS)** — a IIIF-compliant image server developed by the University of Oregon Libraries.
 
-Images are then accessible as:
+## About the project
+
+This test demonstrates how to use RAIS to serve large herbarium images according to the **IIIF Image API**, and display them in a web browser using **OpenSeadragon** for smooth zooming and panning.
+
+## Requirements
+
+- Docker and Docker Compose installed  
+- Python 3 (to start a simple web server for `viewer.html`)
+
+## Structure
+```
+RAIS-test/
+├── docker-compose.yml      # Starts the RAIS IIIF server
+├── images/                 # Folder with JP2 images
+├── README                  # This file
+└── viewer.html             # Simple web page with OpenSeadragon viewer
+```
+
+## Getting started
+
+1. **Start the RAIS IIIF server**  
+   The server loads images from `./images` and makes them available via the IIIF API on port **12415**:
+   ```
+   docker compose up -d
+   ```
+
+2. Start a simple web server in the project folder to serve viewer.html:
+   ```
+   python3 -m http.server 8000
+   ```
+
+3. Open the viewer in your browser:
+   ```
+   http://localhost:8000/viewer.html?image=GB-0526335.jp2
+   ```
+   Replace GB-0526335 with the filename (without .jp2) of any image in the images folder.
+
+## How the RAIS IIIF server works
+Images are accessible via URLs following the IIIF Image API pattern:
+```
 {scheme}://{server}/{prefix}/{identifier}/{region}/{size}/{rotation}/{quality}.{format}
+```
+Examples:
 
-For example:
+Get the full image at full size in JPEG format:
+```
 http://localhost:12415/iiif/GB-0998621.jp2/full/full/0/default.jpg
+```
+Get the same image with width 2000 pixels (height scaled proportionally):
+```
 http://localhost:12415/iiif/GB-0998621.jp2/full/2000,/0/default.jpg
-where:
-1st 'full' -> full region of image
-2nd 'full' -> full size, or: '2000,' -> 2000 px in y-dimension, x scaled proportionately
-0 -> no rotation
-default.jpeg -> standard colours & jpeg format
-
-You can also get info on original info with e.g.:
+```
+Get image metadata:
+```
 http://localhost:12415/iiif/GB-0998621.jp2/info.json
-
-########################################################################################
-
-Alternatively, use with IIIF viewer OpenSeadragon (branch dragon-test)
-Start IIF server:
-docker compose up -d
-Start simple web server:
-python3 -m http.server 8000
-Go to, e.g.:
-http://localhost:8000/viewer.html?image=GB-0591417
+```
