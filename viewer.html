@@ -1,12 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
   <meta charset="UTF-8" />
   <title>Herbarium Image Viewer</title>
+
+  <!-- OpenSeadragon -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/openseadragon.min.js"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto&display=swap" rel="stylesheet">
+
   <style>
-    body { background: #000; color: #4CAF50; font-family: Roboto, sans-serif; margin: 2rem; }
-    #openseadragon { width: 90vw; height: 70vh; margin: auto; border: 2px solid #4CAF50; border-radius: 10px; }
+    body {
+      background-color: #000;
+      color: #4CAF50;
+      font-family: 'Roboto', sans-serif;
+      margin: 2rem;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    #openseadragon {
+      width: 90vw;
+      height: 70vh;
+      margin: 1rem auto 2rem auto;
+      border: 2px solid #4CAF50;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(76, 175, 80, 0.7);
+    }
+
+    .downloads {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .downloads a {
+      background-color: #222;
+      color: #4CAF50;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .downloads a:hover {
+      background-color: #4CAF50;
+      color: #000;
+      box-shadow: 0 0 15px #4CAF50;
+    }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: #777;
+      font-style: italic;
+    }
   </style>
 </head>
 <body>
@@ -14,6 +76,19 @@
   <h1>Herbarium Image Viewer</h1>
 
   <div id="openseadragon"></div>
+
+  <div class="downloads">
+    <a href="http://localhost:12415/iiif/GB-0998621.jp2/full/1200,/0/default.jpg"
+       download="GB-0998621_1200.jpg" class="downloadLink">Download 1200px JPEG</a>
+    <a href="http://localhost:12415/iiif/GB-0998621.jp2/full/4000,/0/default.jpg"
+       download="GB-0998621_4000.jpg" class="downloadLink">Download 4000px JPEG</a>
+    <a href="http://localhost:12415/iiif/GB-0998621.jp2/full/full/0/default.jpg"
+       download="GB-0998621_full.jpg" class="downloadLink">Download full JPEG</a>
+  </div>
+
+  <footer>
+    &copy; 2025 Your Institution Name
+  </footer>
 
   <script>
     // Hämta 'image' param från URL, fallback till standard
@@ -25,10 +100,39 @@
     const imageId = getQueryParam('image');
     const iiifUrl = `http://localhost:12415/iiif/${imageId}.jp2/info.json`;
 
+    // Initiera OpenSeadragon med navigator (minikarta)
     const viewer = OpenSeadragon({
       id: "openseadragon",
       prefixUrl: "https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/images/",
+      showNavigator: true,
+      navigatorPosition: 'BOTTOM_RIGHT',
       tileSources: iiifUrl
+    });
+
+    // Nedladdningsknappar med fetch (för att alltid ladda ner)
+    document.querySelectorAll('.downloadLink').forEach(link => {
+      link.addEventListener('click', function(event) {
+        event.preventDefault();
+        const url = this.href;
+        const filename = this.getAttribute('download') || 'download.jpg';
+
+        fetch(url)
+          .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.blob();
+          })
+          .then(blob => {
+            const blobUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(blobUrl);
+          })
+          .catch(() => alert('Download failed'));
+      });
     });
   </script>
 
