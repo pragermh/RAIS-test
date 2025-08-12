@@ -1,10 +1,6 @@
 # RAIS-test
 
-Minimal test environment for displaying herbarium images in different formats using the **Rodent-Assimilated Image Server (RAIS)** — a IIIF-compliant image server developed by the University of Oregon Libraries.
-
-## About the project
-
-This test demonstrates how to use RAIS to serve large herbarium images according to the **IIIF Image API**, and display them in a web browser using **OpenSeadragon** for smooth zooming and panning.
+Minimal setup for serving large herbarium images via the **Rodent-Assimilated Image Server (RAIS)** — a IIIF ('triple-eye-eff')-compliant server by the University of Oregon Libraries — and viewing them with **OpenSeadragon** for smooth zooming and panning.
 
 ## Requirements
 
