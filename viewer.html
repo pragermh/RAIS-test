@@ -2,7 +2,7 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8" />
-  <title>Herbarium Image Viewer</title>
+  <title>Herbarium GB Image Viewer</title>
 
   <!-- OpenSeadragon -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.0.0/openseadragon.min.js"></script>
@@ -73,21 +73,14 @@
 </head>
 <body>
 
-  <h1>Herbarium Image Viewer</h1>
+  <h1 id="pageTitle">Herbarium GB Image Viewer</h1>
 
   <div id="openseadragon"></div>
 
-  <div class="downloads">
-    <a href="http://localhost:12415/iiif/GB-0998621.jp2/full/1200,/0/default.jpg"
-       download="GB-0998621_1200.jpg" class="downloadLink">Download 1200px JPEG</a>
-    <a href="http://localhost:12415/iiif/GB-0998621.jp2/full/4000,/0/default.jpg"
-       download="GB-0998621_4000.jpg" class="downloadLink">Download 4000px JPEG</a>
-    <a href="http://localhost:12415/iiif/GB-0998621.jp2/full/full/0/default.jpg"
-       download="GB-0998621_full.jpg" class="downloadLink">Download full JPEG</a>
-  </div>
+  <div class="downloads"></div>
 
   <footer>
-    &copy; 2025 Your Institution Name
+    &copy; 2025 Herbarium GB
   </footer>
 
   <script>
@@ -98,7 +91,12 @@
     }
 
     const imageId = getQueryParam('image');
-    const iiifUrl = `http://localhost:12415/iiif/${imageId}.jp2/info.json`;
+    const iiifBase = 'http://localhost:12415/iiif';
+    const iiifUrl = `${iiifBase}/${imageId}.jp2/info.json`;
+
+    // Uppdatera rubriken med imageId på ny rad
+    document.getElementById('pageTitle').innerHTML =
+      `Herbarium GB Image Viewer<br><span style="font-size: 1.5rem; color: #ccc;">${imageId}</span>`;
 
     // Initiera OpenSeadragon med navigator (minikarta)
     const viewer = OpenSeadragon({
@@ -107,6 +105,27 @@
       showNavigator: true,
       navigatorPosition: 'BOTTOM_RIGHT',
       tileSources: iiifUrl
+    });
+
+    // Dynamiskt skapa nedladdningsknappar
+    const sizes = [
+      { label: '1200 px JPEG', size: '1200' },
+      { label: '4000 px JPEG', size: '4000' },
+      { label: 'Full size JPEG', size: 'full' }
+    ];
+    const container = document.querySelector('.downloads');
+
+    sizes.forEach(s => {
+      const url = s.size === 'full'
+        ? `${iiifBase}/${imageId}.jp2/full/full/0/default.jpg`
+        : `${iiifBase}/${imageId}.jp2/full/${s.size},/0/default.jpg`;
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${imageId}_${s.size}.jpg`;
+      a.className = 'downloadLink';
+      a.textContent = s.label;
+      container.appendChild(a);
     });
 
     // Nedladdningsknappar med fetch (för att alltid ladda ner)
