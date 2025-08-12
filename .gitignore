@@ -3,3 +3,5 @@
 
 # Images
 images/*
+# Allow the test image
+!images/GB-0526335.jp2
