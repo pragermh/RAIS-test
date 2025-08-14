@@ -62,3 +62,5 @@ http://localhost:12415/iiif/GB-0998621.jp2/info.json
 [OpenSeadragon](https://openseadragon.github.io/) is a JavaScript library for viewing large, zoomable images.  
 It loads only the visible parts of an image as small tiles, so you can pan and zoom smoothly without downloading the entire file.  
 When used with a IIIF server like RAIS, it reads `info.json` to know how to request the right tiles at the right resolution.
+
+See a live OpenSeadragon IIIF demo [here](https://openseadragon.github.io/examples/tilesource-iiif/).
