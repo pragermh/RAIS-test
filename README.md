@@ -32,7 +32,7 @@ RAIS-test/
 
 3. Open the viewer in your browser:
    ```
-   http://localhost:8000/viewer.html?image=GB-0526335.jp2
+   http://localhost:8000/viewer.html?image=GB-0526335
    ```
    Replace GB-0526335 with the filename (without .jp2) of any image in the images folder.
 
